@@ -10,13 +10,15 @@ import (
 )
 
 var (
-	// This is used for config file
 	cfgFile string
 
 	rootCmd = &cobra.Command{
-		Use:   "letovo",
-		Short: "letovo: s.letovo.ru helper",
-		Long:  `letovo: Get data from s.letovo.ru`,
+		Long: "\033[0;31m          __\n       __/o \\_\n       \\____  \\\n           /   \\\n     __   //\\   \\" +
+			"\n  __/o \\-//--\\   \\_/\n  \\____  ___  \\  |\n       ||   \\ |\\ |\n      _||   _||_||\n\n\n\n" +
+			"\033[34mHow have you been, man? Drink enough water? \033[0m\n\n",
+		Use:     "letovo",
+		Short:   "letovo: s.letovo.ru helper",
+		Version: "0.1.0-alpha",
 	}
 )
 
@@ -52,8 +54,9 @@ func initConfig() {
 		viper.SetConfigName(".letovo")
 	}
 
-	viper.AutomaticEnv()
+	viper.AutomaticEnv() // read in environment variables that match
 
+	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
