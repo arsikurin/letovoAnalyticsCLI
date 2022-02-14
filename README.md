@@ -1,7 +1,3 @@
-# letovoAnalyticsCLI
-
-LetovoAnalyticsCLI helps letovians access s.letovo.ru resources via Terminal
-
 # Building the project
 
 - Go to **src** subdirectory and run one of the following commands
@@ -69,4 +65,5 @@ $ ./letovo.exe
 - Cobra: https://github.com/spf13/cobra
 - Viper: https://github.com/spf13/viper
 
-Made with ❤️ by arsikurin
+---
+**© Made with ❤️ by arsikurin**

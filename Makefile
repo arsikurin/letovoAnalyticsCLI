@@ -1,6 +1,6 @@
 .PHONY: build build-mac-arm64 build-mac-amd64 build-linux-amd64 build-win-amd64
 
-MAIN_SRC = ./src/main.go
+MAIN_SRC = ./src/
 OUTPUT_SRC = ./bin/letovo
 
 # build for current OS
