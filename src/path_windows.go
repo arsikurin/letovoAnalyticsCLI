@@ -3,13 +3,11 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"syscall"
 )
 
 func init() {
-	fmt.Println("Windows detected")
 	stdout := syscall.Handle(os.Stdout.Fd())
 
 	var originalMode uint32

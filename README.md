@@ -1,14 +1,19 @@
-# Building the project
+# How to use
+
+[Build from source](#building-the-project-from-source) or
+[download the latest release](https://github.com/arsikurin/letovoAnalyticsCLI/releases)
+
+## Building the project from source
 
 - Go to **src** subdirectory and run one of the following commands
 
-### Auto determine the operating system
+##### Auto determine the operating system
 
 ```shell
 $ make build
 ```
 
-### Linux
+##### Linux
 
 - ARM
 
@@ -22,7 +27,7 @@ $ make build-linux-arm64
 $ make build-linux-amd64
 ```
 
-### macOS
+#### macOS
 
 - ARM
 
@@ -36,7 +41,7 @@ $ make build-mac-arm64
 $ make build-mac-amd64
 ```
 
-### Windows
+##### Windows
 
 - AMD64
 
@@ -44,26 +49,21 @@ $ make build-mac-amd64
 $ make build-windows-amd64
 ```
 
-# Execution
+## Execution
 
 - Go to **bin** subdirectory and run one of the following commands
 
-### macOS and Linux
+##### macOS and Linux
 
 ```shell
 $ ./letovo
 ```
 
-### Windows
+##### Windows
 
 ```shell
 $ ./letovo.exe
 ```
-
-# References
-
-- Cobra: https://github.com/spf13/cobra
-- Viper: https://github.com/spf13/viper
 
 ---
 **© Made with ❤️ by arsikurin**
