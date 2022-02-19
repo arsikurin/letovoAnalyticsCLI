@@ -3,10 +3,9 @@ package cmd
 import (
 	"fmt"
 	homedir "github.com/mitchellh/go-homedir"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	"github.com/arsikurin/letovoAnalyticsCLI/src/utils"
 )
 
 var (
@@ -42,7 +41,7 @@ func initConfig() {
 		// Find home directory
 		home, err := homedir.Dir()
 		if err != nil {
-			utils.Err(err)
+			log.Errorln(err)
 		}
 
 		viper.AddConfigPath(home)
