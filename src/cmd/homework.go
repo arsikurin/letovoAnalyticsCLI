@@ -57,21 +57,45 @@ func sendHomeworkFor(specificDay time.Weekday) {
 	}
 	fmt.Printf("%s%s %s%s\n", colorlib.Style.Italic, specificDay, startOfWeek.Format("02.01.2006"), colorlib.Style.Reset)
 
+	var (
+		subject string
+		flag    bool
+	)
 	for _, day := range homeworkResponse.Data {
 		if len(day.Schedules) > 0 {
-			// TODO
-			payload := "\n" + day.PeriodName + " | " + colorlib.Style.Italic + day.Schedules[0].Room.RoomName + colorlib.Style.Reset + ":\n"
-			var subject string
 			if day.Schedules[0].Group.Subject.SubjectNameEng != nil {
 				subject = *day.Schedules[0].Group.Subject.SubjectNameEng
 			} else {
 				subject = day.Schedules[0].Group.Subject.SubjectName
 			}
-			payload += colorlib.Fg.Red + subject + colorlib.Fg.Reset + " " + day.Schedules[0].Group.GroupName + "\n"
-			payload += day.PeriodStart + " — " + day.PeriodEnd + "\n"
 
-			if day.Schedules[0].ZoomMeetings != nil {
-				payload += colorlib.Fg.Blue + day.Schedules[0].ZoomMeetings.MeetingUrl + colorlib.Fg.Reset
+			flag = false
+			payload := "\n" + day.PeriodName + ": " + colorlib.Fg.Red + colorlib.Style.Bold + subject + colorlib.Style.Reset + "\n"
+			if len(day.Schedules[0].Lessons) > 0 {
+				if day.Schedules[0].Lessons[0].LessonHw != nil {
+					payload += *day.Schedules[0].Lessons[0].LessonHw + "\n"
+				} else {
+					payload += colorlib.Style.Italic + "No homework\n" + colorlib.Style.Reset
+				}
+
+				if day.Schedules[0].Lessons[0].LessonUrl != nil {
+					flag = true
+					payload += colorlib.Fg.Blue + *day.Schedules[0].Lessons[0].LessonUrl + colorlib.Fg.Reset + "\n"
+				}
+				if day.Schedules[0].Lessons[0].LessonHwUrl != nil {
+					flag = true
+					payload += colorlib.Fg.Blue + *day.Schedules[0].Lessons[0].LessonHwUrl + colorlib.Fg.Reset + "\n"
+				}
+				if !flag {
+					payload += colorlib.Style.Italic + "No links attached\n" + colorlib.Style.Reset
+				}
+				if day.Schedules[0].Lessons[0].LessonTopic != nil {
+					payload += *day.Schedules[0].Lessons[0].LessonTopic
+				} else {
+					payload += colorlib.Style.Italic + "No topic" + colorlib.Style.Reset
+				}
+			} else {
+				payload += "Lessons not found"
 			}
 			fmt.Println(payload)
 		}

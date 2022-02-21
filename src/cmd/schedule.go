@@ -56,16 +56,16 @@ func sendScheduleFor(specificDay time.Weekday) {
 	}
 	fmt.Printf("%s%s %s%s\n", colorlib.Style.Italic, specificDay, startOfWeek.Format("02.01.2006"), colorlib.Style.Reset)
 
+	var subject string
 	for _, day := range scheduleResponse.Data {
 		if len(day.Schedules) > 0 {
 			payload := "\n" + day.PeriodName + " | " + colorlib.Style.Italic + day.Schedules[0].Room.RoomName + colorlib.Style.Reset + ":\n"
-			var subject string
 			if day.Schedules[0].Group.Subject.SubjectNameEng != nil {
 				subject = *day.Schedules[0].Group.Subject.SubjectNameEng
 			} else {
 				subject = day.Schedules[0].Group.Subject.SubjectName
 			}
-			payload += colorlib.Fg.Red + subject + colorlib.Fg.Reset + " " + day.Schedules[0].Group.GroupName + "\n"
+			payload += colorlib.Fg.Red + colorlib.Style.Bold + subject + colorlib.Fg.Reset + " " + day.Schedules[0].Group.GroupName + "\n"
 			payload += day.PeriodStart + " — " + day.PeriodEnd + "\n"
 
 			if day.Schedules[0].ZoomMeetings != nil {
