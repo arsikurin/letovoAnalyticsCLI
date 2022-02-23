@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"html"
 	"os"
 	"time"
 
@@ -42,7 +43,7 @@ var homeworkCmd = &cobra.Command{
 
 func sendWeekHomework() {
 	log.Fatalln("Not implemented!")
-	api.ReceiveScheduleAndHw(true)
+	api.ReceiveScheduleAndHw(true, time.Monday)
 }
 
 func sendHomeworkFor(specificDay time.Weekday) {
@@ -50,12 +51,12 @@ func sendHomeworkFor(specificDay time.Weekday) {
 		fmt.Println("Sunday! No lessons")
 		os.Exit(0)
 	}
-	homeworkResponse := api.ReceiveScheduleAndHw(false)
+	homeworkResponse := api.ReceiveScheduleAndHw(false, specificDay)
 	startOfWeek, err := time.Parse("2006-01-02", homeworkResponse.Data[0].Date)
 	if err != nil {
-		log.Errorln("cannot parse time from response. Perhaps the layout has been changed?")
+		log.Errorln("Cannot parse time from response. Perhaps the layout has been changed?")
 	}
-	fmt.Printf("%s%s %s%s\n", colorlib.Style.Italic, specificDay, startOfWeek.Format("02.01.2006"), colorlib.Style.Reset)
+	fmt.Printf("%s%s, %s%s\n", colorlib.Style.Italic, specificDay, startOfWeek.Format("02.01.2006"), colorlib.Style.Reset)
 
 	var (
 		subject string
@@ -63,8 +64,8 @@ func sendHomeworkFor(specificDay time.Weekday) {
 	)
 	for _, day := range homeworkResponse.Data {
 		if len(day.Schedules) > 0 {
-			if day.Schedules[0].Group.Subject.SubjectNameEng != nil {
-				subject = *day.Schedules[0].Group.Subject.SubjectNameEng
+			if day.Schedules[0].Group.Subject.SubjectNameEng != "" {
+				subject = day.Schedules[0].Group.Subject.SubjectNameEng
 			} else {
 				subject = day.Schedules[0].Group.Subject.SubjectName
 			}
@@ -72,32 +73,32 @@ func sendHomeworkFor(specificDay time.Weekday) {
 			flag = false
 			payload := "\n" + day.PeriodName + ": " + colorlib.Fg.Red + colorlib.Style.Bold + subject + colorlib.Style.Reset + "\n"
 			if len(day.Schedules[0].Lessons) > 0 {
-				if day.Schedules[0].Lessons[0].LessonHw != nil {
-					payload += *day.Schedules[0].Lessons[0].LessonHw + "\n"
+				if day.Schedules[0].Lessons[0].LessonHw != "" {
+					payload += day.Schedules[0].Lessons[0].LessonHw + "\n"
 				} else {
 					payload += colorlib.Style.Italic + "No homework\n" + colorlib.Style.Reset
 				}
 
-				if day.Schedules[0].Lessons[0].LessonUrl != nil {
+				if day.Schedules[0].Lessons[0].LessonUrl != "" {
 					flag = true
-					payload += colorlib.Fg.Blue + *day.Schedules[0].Lessons[0].LessonUrl + colorlib.Fg.Reset + "\n"
+					payload += colorlib.Fg.Blue + day.Schedules[0].Lessons[0].LessonUrl + colorlib.Fg.Reset + "\n"
 				}
-				if day.Schedules[0].Lessons[0].LessonHwUrl != nil {
+				if day.Schedules[0].Lessons[0].LessonHwUrl != "" {
 					flag = true
-					payload += colorlib.Fg.Blue + *day.Schedules[0].Lessons[0].LessonHwUrl + colorlib.Fg.Reset + "\n"
+					payload += colorlib.Fg.Blue + day.Schedules[0].Lessons[0].LessonHwUrl + colorlib.Fg.Reset + "\n"
 				}
 				if !flag {
 					payload += colorlib.Style.Italic + "No links attached\n" + colorlib.Style.Reset
 				}
-				if day.Schedules[0].Lessons[0].LessonTopic != nil {
-					payload += *day.Schedules[0].Lessons[0].LessonTopic
+				if day.Schedules[0].Lessons[0].LessonTopic != "" {
+					payload += day.Schedules[0].Lessons[0].LessonTopic
 				} else {
 					payload += colorlib.Style.Italic + "No topic" + colorlib.Style.Reset
 				}
 			} else {
 				payload += "Lessons not found"
 			}
-			fmt.Println(payload)
+			fmt.Println(html.UnescapeString(payload))
 		}
 	}
 }

@@ -12,11 +12,11 @@ import (
 )
 
 func receiveToken() types.TokenResponse {
+	var err error
 	data := url.Values{
 		"login":    {""},
 		"password": {""},
 	}
-
 	resp, err := http.PostForm("https://s-api.letovo.ru/api/login", data)
 	if err != nil {
 		log.Errorln(err)
@@ -40,23 +40,26 @@ func receiveToken() types.TokenResponse {
 	return *res
 }
 
-func ReceiveScheduleAndHw(week bool) types.ScheduleResponse {
+func ReceiveScheduleAndHw(week bool, specificDay time.Weekday) types.ScheduleResponse {
 	var (
+		err       error
 		urlAddr   string
-		date      string
+		date      time.Time
 		studentId = 54405
 	)
 
 	if time.Now().Weekday() == 0 {
-		date = time.Now().Add(time.Hour * 24).Format("2006-01-02")
+		date = time.Now().Add(time.Hour * 24)
 	} else {
-		date = time.Now().Format("2006-01-02")
+		date = time.Now()
 	}
 
 	if week {
-		urlAddr = "https://s-api.letovo.ru/api/schedule/" + strconv.Itoa(studentId) + "/week?schedule_date=" + date
+		urlAddr = "https://s-api.letovo.ru/api/schedule/" + strconv.Itoa(studentId) + "/week?schedule_date=" + date.Format("2006-01-02")
 	} else {
-		urlAddr = "https://s-api.letovo.ru/api/schedule/" + strconv.Itoa(studentId) + "/day?schedule_date=" + date
+		delta := time.Duration(specificDay - date.Weekday())
+		date = date.Add(time.Hour * 24 * delta)
+		urlAddr = "https://s-api.letovo.ru/api/schedule/" + strconv.Itoa(studentId) + "/day?schedule_date=" + date.Format("2006-01-02")
 	}
 
 	client := &http.Client{}

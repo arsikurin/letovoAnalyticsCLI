@@ -1,23 +1,19 @@
 package colorlib
 
-type style struct {
-	Reset, Bold, Dim, Italic, Underlined, Blink, Inverted, Hidden, Strikethrough, UnderlinedDouble, UnderlinedLower string
-}
-
-type foreground struct {
-	Reset, Black, Red, Green, Yellow, Blue, Magenta, Cyan, Beige, White, Grey, LightRed, LightGreen, LightYellow, LightBlue, LightMagenta, LightCyan string
-}
-
-type background struct {
-	Reset, Black, Red, Green, Yellow, Blue, Magenta, Cyan, Beige, White, Grey, LightRed, LightGreen, LightYellow, LightBlue, LightMagenta, LightCyan string
-}
+type (
+	background struct {
+		Reset, Black, Red, Green, Yellow, Blue, Magenta, Cyan, Beige, White, Grey, LightRed, LightGreen, LightYellow, LightBlue, LightMagenta, LightCyan string
+	}
+	foreground struct {
+		Reset, Black, Red, Green, Yellow, Blue, Magenta, Cyan, Beige, White, Grey, LightRed, LightGreen, LightYellow, LightBlue, LightMagenta, LightCyan string
+	}
+	style struct {
+		Reset, Bold, Dim, Italic, Underlined, Blink, Inverted, Hidden, Strikethrough, UnderlinedDouble, UnderlinedLower string
+	}
+)
 
 type controlCharacters struct {
 	Backspace, Tab, LineFeed, CarriageReturn string
-	// For use inside strings
-	// Backslash \\
-	// Double quote \"
-	// Quote \'
 }
 
 var (

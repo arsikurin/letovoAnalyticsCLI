@@ -7,6 +7,7 @@ import (
 	"github.com/arsikurin/letovoAnalyticsCLI/src/utils/colorlib"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"html"
 	"os"
 	"time"
 )
@@ -41,7 +42,7 @@ var scheduleCmd = &cobra.Command{
 
 func sendWeekSchedule() {
 	log.Fatalln("Not implemented!")
-	api.ReceiveScheduleAndHw(true)
+	api.ReceiveScheduleAndHw(true, time.Monday)
 }
 
 func sendScheduleFor(specificDay time.Weekday) {
@@ -49,29 +50,29 @@ func sendScheduleFor(specificDay time.Weekday) {
 		fmt.Println("Sunday! No lessons")
 		os.Exit(0)
 	}
-	scheduleResponse := api.ReceiveScheduleAndHw(false)
+	scheduleResponse := api.ReceiveScheduleAndHw(false, specificDay)
 	startOfWeek, err := time.Parse("2006-01-02", scheduleResponse.Data[0].Date)
 	if err != nil {
-		log.Errorln("cannot parse time from response. Perhaps the layout has been changed?")
+		log.Errorln("Cannot parse time from response. Perhaps the layout has been changed?")
 	}
-	fmt.Printf("%s%s %s%s\n", colorlib.Style.Italic, specificDay, startOfWeek.Format("02.01.2006"), colorlib.Style.Reset)
+	fmt.Printf("%s%s, %s%s\n", colorlib.Style.Italic, specificDay, startOfWeek.Format("02.01.2006"), colorlib.Style.Reset)
 
 	var subject string
 	for _, day := range scheduleResponse.Data {
 		if len(day.Schedules) > 0 {
 			payload := "\n" + day.PeriodName + " | " + colorlib.Style.Italic + day.Schedules[0].Room.RoomName + colorlib.Style.Reset + ":\n"
-			if day.Schedules[0].Group.Subject.SubjectNameEng != nil {
-				subject = *day.Schedules[0].Group.Subject.SubjectNameEng
+			if day.Schedules[0].Group.Subject.SubjectNameEng != "" {
+				subject = day.Schedules[0].Group.Subject.SubjectNameEng
 			} else {
 				subject = day.Schedules[0].Group.Subject.SubjectName
 			}
 			payload += colorlib.Fg.Red + colorlib.Style.Bold + subject + colorlib.Fg.Reset + " " + day.Schedules[0].Group.GroupName + "\n"
-			payload += day.PeriodStart + " — " + day.PeriodEnd + "\n"
+			payload += day.PeriodStart + " — " + day.PeriodEnd
 
 			if day.Schedules[0].ZoomMeetings != nil {
-				payload += colorlib.Fg.Blue + day.Schedules[0].ZoomMeetings.MeetingUrl + colorlib.Fg.Reset
+				payload += "\n" + colorlib.Fg.Blue + day.Schedules[0].ZoomMeetings.MeetingUrl + colorlib.Fg.Reset
 			}
-			fmt.Println(payload)
+			fmt.Println(html.UnescapeString(payload))
 		}
 	}
 }
