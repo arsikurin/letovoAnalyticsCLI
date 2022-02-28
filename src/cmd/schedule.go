@@ -17,7 +17,6 @@ func init() {
 
 	scheduleCmd.Flags().BoolP("week", "w", false, "send schedule for the week")
 	scheduleCmd.Flags().StringP("day", "d", "", "specify a day")
-
 }
 
 var scheduleCmd = &cobra.Command{

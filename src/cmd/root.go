@@ -17,7 +17,7 @@ var (
 			"\033[34mHow have you been, man? Drink enough water? \033[0m\n\n",
 		Use:     "letovo",
 		Short:   "letovo: s.letovo.ru helper",
-		Version: "0.1.0-alpha",
+		Version: "0.7.0-beta",
 	}
 )
 

@@ -18,7 +18,6 @@ func init() {
 
 	homeworkCmd.Flags().BoolP("week", "w", false, "send homework for the week")
 	homeworkCmd.Flags().StringP("day", "d", "", "specify a day")
-
 }
 
 var homeworkCmd = &cobra.Command{

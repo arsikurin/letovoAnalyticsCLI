@@ -45,7 +45,7 @@ func ReceiveScheduleAndHw(week bool, specificDay time.Weekday) types.ScheduleRes
 		err       error
 		urlAddr   string
 		date      time.Time
-		studentId = 54405
+		studentId = 54142
 	)
 
 	if time.Now().Weekday() == 0 {
@@ -81,7 +81,7 @@ func ReceiveScheduleAndHw(week bool, specificDay time.Weekday) types.ScheduleRes
 	//json.Unmarshal(body, &v)
 	//fmt.Println(v)
 	res := new(types.ScheduleResponse)
-	err = json.NewDecoder(resp.Body).Decode(&res)
+	err = json.NewDecoder(resp.Body).Decode(res)
 	if err != nil {
 		log.Errorln(err)
 	}

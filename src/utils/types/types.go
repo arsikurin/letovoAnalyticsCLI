@@ -2,6 +2,12 @@ package types
 
 import "reflect"
 
+type DatabaseCreds struct {
+	StudentID *int
+	Password  *string
+	Login     *string
+}
+
 type TokenResponse struct {
 	Status  string `json:"status"`
 	Code    int    `json:"code"`
@@ -12,6 +18,7 @@ type TokenResponse struct {
 		TokenType string `json:"token_type"`
 	} `json:"data"`
 }
+
 type (
 	ScheduleResponse struct {
 		Status  string `json:"status"`

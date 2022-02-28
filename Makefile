@@ -9,7 +9,7 @@ build:
 
 # build for windows AMD64
 build-win-amd64:
-	env GOOS=windows GOARCH=amd64 go build -o $(OUTPUT_SRC).exe $(MAIN_SRC)
+	env GOOS=windows GOARCH=amd64 CGO_ENABLED="1" CC="x86_64-w64-mingw32-gcc" go build -o $(OUTPUT_SRC).exe $(MAIN_SRC)
 
 # build for macOS ARM64
 build-mac-arm64:
