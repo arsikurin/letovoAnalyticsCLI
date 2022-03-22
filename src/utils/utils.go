@@ -1,12 +1,12 @@
 package utils
 
 import (
-	log "github.com/sirupsen/logrus"
+	"errors"
 	"regexp"
 	"time"
 )
 
-func ParseDay(dayRaw string) time.Weekday {
+func ParseDay(dayRaw string) (time.Weekday, error) {
 	isMonday, _ := regexp.MatchString(`(?i)^mo`, dayRaw)
 	isTuesday, _ := regexp.MatchString(`(?i)^tu`, dayRaw)
 	isWednesday, _ := regexp.MatchString(`(?i)^we`, dayRaw)
@@ -16,19 +16,18 @@ func ParseDay(dayRaw string) time.Weekday {
 
 	switch true {
 	case isMonday:
-		return time.Monday
+		return time.Monday, nil
 	case isTuesday:
-		return time.Tuesday
+		return time.Tuesday, nil
 	case isWednesday:
-		return time.Wednesday
+		return time.Wednesday, nil
 	case isThursday:
-		return time.Thursday
+		return time.Thursday, nil
 	case isFriday:
-		return time.Friday
+		return time.Friday, nil
 	case isSaturday:
-		return time.Saturday
+		return time.Saturday, nil
 	default:
-		log.Fatalln("Cannot parse the specific day you provided")
-		return -1
+		return -1, errors.New("cannot parse the specific day you specified")
 	}
 }

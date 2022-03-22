@@ -19,6 +19,39 @@ type TokenResponse struct {
 	} `json:"data"`
 }
 
+type MeResponse struct {
+	Status  string `json:"status"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    struct {
+		User struct {
+			StudentID int `json:"student_id"`
+		} `json:"user"`
+	} `json:"data"`
+}
+
+//{
+//    "status": "ok",
+//    "code": 200,
+//    "message": "Информация по учетной записи получена",
+//    "data": {
+//        "user": {
+//            "id": 671932,
+//            "name": "2024antoshin.ii",
+//            "email": "2024ant*******@student.letovo.ru",
+//            "user_type": "student",
+//            "is_email_verified": 1,
+//            "is_current_password": 1,
+//            "phone": "79*****9716",
+//            "parent_id": 0,
+//            "student_id": 54142,
+//            "is_phone_verified": 0,
+//            "bad_pwd_count": 0,
+//            "is_blocked_by_badpwd_limit": 0,
+//            "bad_ad_pwd_count": 0,
+//            "is_disable": 0,
+//            "roles": []
+//        },
 type (
 	ScheduleResponse struct {
 		Status  string `json:"status"`

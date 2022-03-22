@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
+	"github.com/arsikurin/letovoAnalyticsCLI/src/utils/database"
 	"html"
 	"os"
 	"time"
@@ -25,35 +28,57 @@ var homeworkCmd = &cobra.Command{
 	Aliases: []string{"hw", "h"},
 	Short:   "Get homework (default is for today)",
 	Long:    `Get homework from s.letovo.ru (default is for today)`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// get the flag value, its default value is false
-		entireStatus, _ := cmd.Flags().GetBool("week")
-		specificDay, _ := cmd.Flags().GetString("day")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		entireStatus, err := cmd.Flags().GetBool("week")
+		if err != nil {
+			return err
+		}
+		specificDay, err := cmd.Flags().GetString("day")
+		if err != nil {
+			return err
+		}
+		db, err := database.OpenFileDB("sqlite3", "./db.sqlite")
+		if err != nil {
+			return err
+		}
+		defer func(db *sql.DB) {
+			err := db.Close()
+			if err != nil {
+				log.Errorln(err)
+			}
+		}(db)
 
 		if entireStatus {
-			sendWeekHomework()
+			return sendWeekHomework()
 		} else if specificDay != "" {
-			sendHomeworkFor(utils.ParseDay(specificDay))
+			day, err := utils.ParseDay(specificDay)
+			if err != nil {
+				return err
+			}
+			return sendHomeworkFor(db, day)
 		} else {
-			sendHomeworkFor(time.Now().Weekday())
+			return sendHomeworkFor(db, time.Now().Weekday())
 		}
 	},
 }
 
-func sendWeekHomework() {
-	log.Fatalln("Not implemented!")
-	api.ReceiveScheduleAndHw(true, time.Monday)
+func sendWeekHomework() error {
+	return errors.New("not implemented")
+	//api.ReceiveScheduleAndHw(true, time.Monday)
 }
 
-func sendHomeworkFor(specificDay time.Weekday) {
+func sendHomeworkFor(db *sql.DB, specificDay time.Weekday) error {
 	if specificDay == time.Sunday {
 		fmt.Println("Sunday! No lessons")
 		os.Exit(0)
 	}
-	homeworkResponse := api.ReceiveScheduleAndHw(false, specificDay)
+	homeworkResponse, err := api.ReceiveScheduleAndHw(db, false, specificDay)
+	if err != nil {
+		return err
+	}
 	startOfWeek, err := time.Parse("2006-01-02", homeworkResponse.Data[0].Date)
 	if err != nil {
-		log.Errorln("Cannot parse time from response. Perhaps the layout has been changed?")
+		return errors.New("cannot parse time from response. Perhaps the layout has been changed")
 	}
 	fmt.Printf("%s%s, %s%s\n", colorlib.Style.Italic, specificDay, startOfWeek.Format("02.01.2006"), colorlib.Style.Reset)
 
@@ -100,4 +125,5 @@ func sendHomeworkFor(specificDay time.Weekday) {
 			fmt.Println(html.UnescapeString(payload))
 		}
 	}
+	return nil
 }
