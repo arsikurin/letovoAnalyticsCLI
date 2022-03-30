@@ -129,7 +129,7 @@ func initUser(db *sql.DB) error {
 }
 
 func UpdateCreds(db *sql.DB, password string, login string, studentID int) error {
-	//goland:noinspection SqlWithoutWhere
+	// noinspection SqlWithoutWhere
 	query, err := db.Prepare(
 		`UPDATE users SET password=?, login=?, student_id=?`,
 	)

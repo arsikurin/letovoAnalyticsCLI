@@ -81,10 +81,10 @@ func ReceiveStudentID(db *sql.DB) (int, error) {
 	return res.Data.User.StudentID, nil
 }
 
-func ReceiveScheduleAndHw(db *sql.DB, week bool, specificDay time.Weekday) (types.ScheduleResponse, error) {
+func ReceiveScheduleAndHw(db *sql.DB, week bool, specificDay time.Weekday) (types.ScheduleAndHwResponse, error) {
 	creds, err := database.GetCreds(db)
 	if err != nil {
-		return types.ScheduleResponse{}, err
+		return types.ScheduleAndHwResponse{}, err
 	}
 	var (
 		urlAddr   string
@@ -109,24 +109,24 @@ func ReceiveScheduleAndHw(db *sql.DB, week bool, specificDay time.Weekday) (type
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", urlAddr, nil)
 	if err != nil {
-		return types.ScheduleResponse{}, err
+		return types.ScheduleAndHwResponse{}, err
 	}
 
 	tokenResp, err := receiveToken(db)
 	if err != nil {
-		return types.ScheduleResponse{}, err
+		return types.ScheduleAndHwResponse{}, err
 	}
 
 	req.Header.Set("Authorization", "Bearer "+tokenResp.Data.Token)
 	resp, err := client.Do(req)
 	if err != nil {
-		return types.ScheduleResponse{}, err
+		return types.ScheduleAndHwResponse{}, err
 	}
 	if resp.StatusCode != 200 {
-		return types.ScheduleResponse{}, errors.New("unable to obtain schedule: " + resp.Status)
+		return types.ScheduleAndHwResponse{}, errors.New("unable to obtain schedule or homework: " + resp.Status)
 	}
 
-	res := new(types.ScheduleResponse)
+	res := new(types.ScheduleAndHwResponse)
 	err = json.NewDecoder(resp.Body).Decode(res)
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -135,7 +135,57 @@ func ReceiveScheduleAndHw(db *sql.DB, week bool, specificDay time.Weekday) (type
 		}
 	}(resp.Body)
 	if err != nil {
-		return types.ScheduleResponse{}, err
+		return types.ScheduleAndHwResponse{}, err
+	}
+	return *res, nil
+}
+
+func ReceiveMarks(db *sql.DB) (types.MarksResponse, error) {
+	creds, err := database.GetCreds(db)
+	if err != nil {
+		return types.MarksResponse{}, err
+	}
+	var (
+		urlAddr   string
+		studentId = *creds.StudentID
+		periodNum = "1"
+	)
+
+	if time.Now().Month() < 9 {
+		periodNum = "2"
+	}
+	urlAddr = "https://s-api.letovo.ru/api/schoolprogress/" + strconv.Itoa(studentId) + "?period_num=" + periodNum
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", urlAddr, nil)
+	if err != nil {
+		return types.MarksResponse{}, err
+	}
+
+	tokenResp, err := receiveToken(db)
+	if err != nil {
+		return types.MarksResponse{}, err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+tokenResp.Data.Token)
+	resp, err := client.Do(req)
+	if err != nil {
+		return types.MarksResponse{}, err
+	}
+	if resp.StatusCode != 200 {
+		return types.MarksResponse{}, errors.New("unable to obtain marks: " + resp.Status)
+	}
+
+	res := new(types.MarksResponse)
+	err = json.NewDecoder(resp.Body).Decode(res)
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Errorln(err)
+		}
+	}(resp.Body)
+	if err != nil {
+		return types.MarksResponse{}, err
 	}
 	return *res, nil
 }

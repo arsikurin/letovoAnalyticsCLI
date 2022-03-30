@@ -1,6 +1,8 @@
 package types
 
-import "reflect"
+import (
+	"strconv"
+)
 
 type DatabaseCreds struct {
 	StudentID *int
@@ -30,46 +32,24 @@ type MeResponse struct {
 	} `json:"data"`
 }
 
-//{
-//    "status": "ok",
-//    "code": 200,
-//    "message": "Информация по учетной записи получена",
-//    "data": {
-//        "user": {
-//            "id": 671932,
-//            "name": "2024antoshin.ii",
-//            "email": "2024ant*******@student.letovo.ru",
-//            "user_type": "student",
-//            "is_email_verified": 1,
-//            "is_current_password": 1,
-//            "phone": "79*****9716",
-//            "parent_id": 0,
-//            "student_id": 54142,
-//            "is_phone_verified": 0,
-//            "bad_pwd_count": 0,
-//            "is_blocked_by_badpwd_limit": 0,
-//            "bad_ad_pwd_count": 0,
-//            "is_disable": 0,
-//            "roles": []
-//        },
 type (
-	ScheduleResponse struct {
+	ScheduleAndHwResponse struct {
 		Status  string `json:"status"`
 		Code    int    `json:"code"`
 		Message string `json:"message"`
 		Data    []data `json:"data"`
 	}
 	data struct {
-		PeriodNumDay int         `json:"period_num_day"`
-		PeriodName   string      `json:"period_name"`
-		PeriodStart  string      `json:"period_start"`
-		PeriodEnd    string      `json:"period_end"`
-		Date         string      `json:"date"`
-		Schedules    []schedules `json:"schedules"`
+		PeriodNumDay int        `json:"period_num_day"`
+		PeriodName   string     `json:"period_name"`
+		PeriodStart  string     `json:"period_start"`
+		PeriodEnd    string     `json:"period_end"`
+		Date         string     `json:"date"`
+		Schedules    []schedule `json:"schedules"`
 	}
-	schedules struct {
-		ScheduleRoom int       `json:"schedule_room"`
-		Lessons      []lessons `json:"lessons"`
+	schedule struct {
+		ScheduleRoom int      `json:"schedule_room"`
+		Lessons      []lesson `json:"lessons"`
 		ZoomMeetings *struct {
 			MeetingUrl string `json:"meeting_url"`
 		} `json:"zoom_meetings"`
@@ -79,9 +59,8 @@ type (
 			RoomDescription string `json:"room_description"`
 		} `json:"room"`
 	}
-	lessons struct {
-		LessonTopic string `json:"lesson_thema,omitempty"`
-		//LessonCanvas  int     `json:"lesson_canvas"`
+	lesson struct {
+		LessonTopic   string `json:"lesson_thema,omitempty"`
 		LessonUrl     string `json:"lesson_url,omitempty"`
 		LessonHw      string `json:"lesson_hw,omitempty"`
 		LessonHwDate  string `json:"lesson_hw_date,omitempty"`
@@ -100,6 +79,44 @@ type (
 	}
 )
 
-func (s schedules) IsEmpty() bool {
-	return reflect.DeepEqual(s, schedules{})
+// MarksResponse represents ...
+type (
+	MarksResponse struct {
+		Status  string    `json:"status"`
+		Code    int       `json:"code"`
+		Message string    `json:"message"`
+		Data    []Subject `json:"data"`
+	}
+	Subject struct {
+		FormativeAvgValue float32     `json:"formative_avg_value,omitempty"`
+		SummativeAvgValue float32     `json:"summative_avg_value,omitempty"`
+		FormativeList     []mark      `json:"formative_list"`
+		SummativeList     []mark      `json:"summative_list"`
+		GroupAvgMark      string      `json:"group_avg_mark,omitempty"`
+		FinalMarkList     []finalMark `json:"final_mark_list"`
+		ResultFinalMark   string      `json:"result_final_mark,omitempty"`
+		Group             group       `json:"group"`
+	}
+	finalMark struct {
+		FinalValue     string `json:"final_value"`
+		FinalCriterion string `json:"final_criterion"`
+	}
+	MarkValue string
+	mark      struct {
+		MarkValue       MarkValue `json:"mark_value"`
+		MarkCriterion   string    `json:"mark_criterion,omitempty"`
+		CreatedAt       string    `json:"created_at"`
+		FormName        string    `json:"form_name,omitempty"`
+		FormDescription string    `json:"form_description,omitempty"`
+	}
+)
+
+func (mv MarkValue) Int() (int, error) {
+	return strconv.Atoi(string(mv))
+}
+func (mv MarkValue) IsDigit() bool {
+	if _, err := strconv.Atoi(string(mv)); err == nil {
+		return true
+	}
+	return false
 }
