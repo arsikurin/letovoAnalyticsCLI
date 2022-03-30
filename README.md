@@ -1,69 +1,99 @@
-# How to use
+<div align="center">
 
-[Build from source](#building-the-project-from-source) or
-[download the latest release](https://github.com/arsikurin/letovoAnalyticsCLI/releases)
+# letovoCLI
 
-## Building the project from source
+letovo is a fancy tool for accessing your [school](https://s.letovo.ru/) data.
 
-- Go to **src** subdirectory and run one of the following commands
+**README Sections:** [Options](#options) — [Installation](#installation)
 
-##### Auto determine the operating system
+</div>
 
-```shell
-$ make build
-```
 
-##### Linux
+[//]: # (---)
 
-- ARM
+[//]: # ()
 
-```shell
-$ make build-linux-arm64
-```
+[//]: # (**exa** is a modern replacement for the venerable file-listing command-line program `ls` that ships with Unix and Linux)
 
-- AMD64
+[//]: # (operating systems, giving it more features and better defaults. It uses colours to distinguish file types and metadata.)
 
-```shell
-$ make build-linux-amd64
-```
+[//]: # (It knows about symlinks, extended attributes, and Git. And it’s **small**, **fast**, and just **one single binary**.)
 
-#### macOS
+[//]: # ()
 
-- ARM
+[//]: # (---)
 
-```shell
-$ make build-mac-arm64
-```
+<a id="options">
+<h1>Command-line options</h1>
+</a>
 
-- AMD64
+### letovo register [flags]
 
-```shell
-$ make build-mac-amd64
-```
+_Register your school credentials_
 
-##### Windows
+#### aliases = `r`, `reg`
 
-- AMD64
+### letovo help [flags]
 
-```shell
-$ make build-windows-amd64
-```
+_Pass any command to display manual about it_
 
-## Execution
+#### aliases = _none_
 
-- Go to **bin** subdirectory and run one of the following commands
+### letovo schedule [flags]
 
-##### macOS and Linux
+_Get schedule from s.letovo.ru_
 
-```shell
-$ ./letovo
-```
+#### aliases = `s`, `sch`
 
-##### Windows
+- **-d {string}**, **--day {string}**: display a schedule for the specific day
+- **-w**, **--week**: display a schedule for the week
 
-```shell
-$ ./letovo.exe
-```
+_Default is for today_
+
+### letovo homework [flags]
+
+_Get homework from s.letovo.ru_
+
+#### aliases = `h`, `hw`
+
+- **-d {string}**, **--day {string}**: display a schedule for the specific day
+- **-w**, **--week**: display a homework for the week
+
+_Default is for today_
+
+### letovo marks [flags]
+
+_Get marks from s.letovo.ru_
+
+#### aliases = `m`, `ma`
+
+- **-d {string}**, **--day {string}**: display a schedule for the specific day
+- **-a**, **--all**: display all marks
+- **-f**, **--final**: display final marks
+- **-s**, **--summative**: display summative marks
+
+_Default is marks within one week_
+
+### Some options accept parameters:
+
+- Valid **--day** options are **`(?i)^mo`**, **`(?i)^tu`**, **`(?i)^we`**, **`(?i)^th`**, **`(?i)^fr`** and**`(?i)^sa`**
 
 ---
+
+<a id="installation">
+<h1>Installation</h1>
+</a>
+
+`letovo` is available for macOS, Linux and Windows.
+
+### Download a binary
+
+Compiled binary versions of `letovo` are uploaded to GitHub when a release is made. You can install `letovo` manually
+by [downloading a release](https://github.com/arsikurin/letovoAnalyticsCLI/releases), extracting it, and copying the
+binary to a directory in your `$PATH`, such as `/usr/local/bin`.
+
+### Build from source
+
+...
+
 **© Made with ❤️ by arsikurin**
