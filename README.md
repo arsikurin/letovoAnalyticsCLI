@@ -27,43 +27,47 @@ letovo is a fancy tool for accessing your [school](https://s.letovo.ru/) data.
 <h1>Command-line options</h1>
 </a>
 
-### letovo register [flags]
-
-_Register your school credentials_
-
-#### aliases = `r`, `reg`
-
 ### letovo help [flags]
 
-_Pass any command to display manual about it_
+Pass any command to display manual about it
 
 #### aliases = _none_
 
+<br/>
+
+### letovo register [flags]
+
+Register your school credentials
+
+#### aliases = `r`, `reg`
+
+<br/>
+
 ### letovo schedule [flags]
 
-_Get schedule from s.letovo.ru_
+Get schedule from s.letovo.ru _(Default is for today)_
 
 #### aliases = `s`, `sch`
 
 - **-d {string}**, **--day {string}**: display a schedule for the specific day
 - **-w**, **--week**: display a schedule for the week
 
-_Default is for today_
+<br/>
 
 ### letovo homework [flags]
 
-_Get homework from s.letovo.ru_
+Get homework from s.letovo.ru _(Default is for today)_
 
 #### aliases = `h`, `hw`
 
 - **-d {string}**, **--day {string}**: display a schedule for the specific day
 - **-w**, **--week**: display a homework for the week
 
-_Default is for today_
+<br/>
 
 ### letovo marks [flags]
 
-_Get marks from s.letovo.ru_
+Get marks from s.letovo.ru _(Default is marks within one week)_
 
 #### aliases = `m`, `ma`
 
@@ -72,11 +76,12 @@ _Get marks from s.letovo.ru_
 - **-f**, **--final**: display final marks
 - **-s**, **--summative**: display summative marks
 
-_Default is marks within one week_
+<br/>
 
 ### Some options accept parameters:
 
-- Valid **--day** options are **`(?i)^mo`**, **`(?i)^tu`**, **`(?i)^we`**, **`(?i)^th`**, **`(?i)^fr`** and**`(?i)^sa`**
+- Valid **--day** options are monday **`(?i)^mo`**, tuesday **`(?i)^tu`**, wednesday **`(?i)^we`**,
+  thursday **`(?i)^th`**, friday **`(?i)^fr`** and saturday **`(?i)^sa`**
 
 ---
 
